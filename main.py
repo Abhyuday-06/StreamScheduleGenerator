@@ -4,38 +4,31 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Dictionary to store GMT offsets for timezones
+
 timezone_offsets = {
-    "AEST": 10,    # GMT +10
-    "AEDT": 11,    # GMT +11
-    "CEST": 2,     # GMT +2
-    "CET": 1,      # GMT +1
-    "SGT": 8,      # GMT +8
+    "AEST": 10,   
+    "AEDT": 11,   
+    "CEST": 2,     
+    "CET": 1,    
+    "SGT": 8,     
 }
 
 def to_discord_timestamp(datetime_str, timezone):
-    # Parse the input date and time (in "Y-m-d H:i" format from Flatpickr)
-    stream_time = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
-    
-    # Get the offset for the selected timezone
+    stream_time = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")  
     offset_hours = timezone_offsets[timezone]
-    
-    # Create a timezone-aware datetime object based on the selected timezone
     timezone_obj = pytz.FixedOffset(offset_hours * 60)
-    stream_time = timezone_obj.localize(stream_time)
-    
-    # Convert the timezone-aware datetime to a Discord timestamp
+    stream_time = timezone_obj.localize(stream_time) 
     discord_timestamp = int(stream_time.timestamp())
     
-    return discord_timestamp, stream_time.date()  # Returning both timestamp and date
+    return discord_timestamp, stream_time.date()  
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         timezone = request.form.get('timezone')
-        datetime_strs = request.form.getlist('datetime')  # Get all date-time inputs
-        stream_infos = request.form.getlist('stream_info')  # Get all stream info inputs
-        platforms = request.form.getlist('platform')  # Get all platform inputs
+        datetime_strs = request.form.getlist('datetime') 
+        stream_infos = request.form.getlist('stream_info')  
+        platforms = request.form.getlist('platform')  
 
         output_messages = []
         previous_date = None
@@ -55,7 +48,7 @@ def index():
 
             # If this stream is on a different date from the previous stream, add a line gap
             if previous_date and previous_date != stream_date:
-                output_messages.append("")  # Add a line break if dates are different
+                output_messages.append("")  
 
             output_messages.append(message)
             previous_date = stream_date  # Update the previous date
