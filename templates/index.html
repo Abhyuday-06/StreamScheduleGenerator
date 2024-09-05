@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Schedule Generator</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Include Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Stream Schedule Generator</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="timezone">Timezone</label>
+                <select id="timezone" name="timezone" class="form-control">
+                    <option value="AEST">AEST (GMT +10)</option>
+                    <option value="AEDT">AEDT (GMT +11)</option>
+                    <option value="CEST">CEST (GMT +2)</option>
+                    <option value="CET">CET (GMT +1)</option>
+                    <option value="SGT">SGT (GMT +8)</option>
+                </select>
+            </div>
+
+            <div id="stream-list">
+                <div class="stream-item">
+                    <div class="form-group">
+                        <label for="datetime">Date and Time</label>
+                        <input type="text" name="datetime" class="form-control datetime-picker" placeholder="Select Date and Time" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stream_info">Stream Info</label>
+                        <input type="text" name="stream_info" class="form-control" placeholder="Enter Stream Info" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="platform">Platform</label>
+                        <select name="platform" class="form-control">
+                            <option value="Twitch">🟪 Twitch</option>
+                            <option value="Kick">🟩 Kick</option>
+                            <option value="Twitch + YouTube">🟪 Twitch + 🟥 YouTube</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-stream" class="btn btn-secondary">Add Another Stream</button>
+            <button type="submit" class="btn btn-primary">Generate</button>
+        </form>
+
+        {% if output_messages %}
+            <div class="mt-5">
+                <h3>Generated Messages</h3>
+                <ul class="list-group">
+                    {% for message in output_messages %}
+                        <li class="list-group-item">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <button class="btn btn-success mt-3" onclick="copyToClipboard()">Copy to Clipboard</button>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript to handle adding streams and Flatpickr integration -->
+    <script>
+        document.getElementById('add-stream').addEventListener('click', function() {
+            var streamList = document.getElementById('stream-list');
+            var newStream = document.querySelector('.stream-item').cloneNode(true);
+            streamList.appendChild(newStream);
+
+            // Reinitialize Flatpickr for new datetime fields
+            flatpickr('.datetime-picker', {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+            });
+        });
+
+        // Initialize Flatpickr for datetime picker
+        flatpickr('.datetime-picker', {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        // Copy to clipboard functionality
+        function copyToClipboard() {
+            var text = '';
+            var listItems = document.querySelectorAll('.list-group-item');
+            listItems.forEach(item => {
+                text += item.textContent + '\n';
+            });
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard');
+            });
+        }
+    </script>
+</body>
+</html>
