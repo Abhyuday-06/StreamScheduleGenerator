@@ -134,23 +134,37 @@
             enableTime: true,
             dateFormat: "Y-m-d H:i",
         });
-
+    
         // Add new stream functionality
         document.getElementById('add-stream').addEventListener('click', function() {
             var streamList = document.getElementById('stream-list');
             var newStream = document.querySelector('.stream-item').cloneNode(true);
+            
+            // Clear all input fields in the newly cloned stream
+            var inputs = newStream.querySelectorAll('input');
+            inputs.forEach(function(input) {
+                input.value = ''; // Clear the value of the input
+            });
+    
+            // Reset the select fields to their default option
+            var selects = newStream.querySelectorAll('select');
+            selects.forEach(function(select) {
+                select.selectedIndex = 0; // Reset to the first option
+            });
+    
+            // Append the new, empty stream item to the stream list
             streamList.appendChild(newStream);
-
+    
             // Reinitialize Flatpickr for new datetime fields
             flatpickr('.datetime-picker', {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
             });
-
+    
             // Attach event listener to new remove button
             attachRemoveEvent();
         });
-
+    
         // Remove stream functionality
         function attachRemoveEvent() {
             var removeButtons = document.querySelectorAll('.remove-stream-btn');
@@ -161,19 +175,19 @@
                 });
             });
         }
-
+    
         // Attach the remove event when the page loads
         attachRemoveEvent();
-
+    
         // Dark mode toggle functionality
         const body = document.body;
         const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
-
+    
         toggleDarkModeBtn.addEventListener('click', function() {
             body.classList.toggle('dark-mode');
             body.classList.toggle('light-mode');
         });
-
+    
         // Copy to clipboard functionality
         function copyToClipboard() {
             var text = '';
@@ -186,5 +200,6 @@
             });
         }
     </script>
+    
 </body>
 </html>
