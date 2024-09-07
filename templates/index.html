@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Schedule Generator</title>
 
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
+    <!-- Include Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+    <!-- Custom CSS for Dark Mode -->
     <style>
         body.light-mode {
             background-color: white;
@@ -36,6 +39,7 @@
             color: white;
         }
 
+        /* Styling for the delete button */
         .remove-stream-btn {
             margin-top: 10px;
             display: block;
@@ -63,7 +67,7 @@
                 <div class="stream-item">
                     <div class="form-group">
                         <label for="timezone">Timezone</label>
-                        <select id="timezone" name="timezone" class="form-control">
+                        <select name="timezones" class="form-control">
                             <option value="AEST">AEST (GMT +10)</option>
                             <option value="AEDT">AEDT (GMT +11)</option>
                             <option value="CEST">CEST (GMT +2)</option>
@@ -116,12 +120,16 @@
         {% endif %}
     </div>
 
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+        // Initialize Flatpickr for datetime picker
         flatpickr('.datetime-picker', {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
@@ -131,7 +139,7 @@
         document.getElementById('add-stream').addEventListener('click', function() {
             var streamList = document.getElementById('stream-list');
             var newStream = document.querySelector('.stream-item').cloneNode(true);
-            
+    
             // Clear all input fields in the newly cloned stream
             var inputs = newStream.querySelectorAll('input');
             inputs.forEach(function(input) {
@@ -162,8 +170,15 @@
             var removeButtons = document.querySelectorAll('.remove-stream-btn');
             removeButtons.forEach(function(button) {
                 button.addEventListener('click', function() {
-                    // Remove the parent stream item when the button is clicked
-                    this.closest('.stream-item').remove();
+                    // Only remove the stream if there's more than one left
+                    var streamList = document.getElementById('stream-list');
+                    var streamItems = streamList.querySelectorAll('.stream-item');
+    
+                    if (streamItems.length > 1) {
+                        this.closest('.stream-item').remove(); // Remove the parent stream item
+                    } else {
+                        alert("At least one stream must be present.");
+                    }
                 });
             });
         }
