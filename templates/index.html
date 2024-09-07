@@ -62,7 +62,7 @@
         <!-- Dark Mode Toggle Button -->
         <button class="btn btn-secondary mb-3" id="toggle-dark-mode">Toggle Dark Mode</button>
 
-        <form method="POST">
+        <form method="POST" id="stream-form">
             <div id="stream-list">
                 <div class="stream-item">
                     <div class="form-group">
@@ -134,37 +134,37 @@
             enableTime: true,
             dateFormat: "Y-m-d H:i",
         });
-    
+
         // Add new stream functionality
         document.getElementById('add-stream').addEventListener('click', function() {
             var streamList = document.getElementById('stream-list');
             var newStream = document.querySelector('.stream-item').cloneNode(true);
-    
+
             // Clear all input fields in the newly cloned stream
             var inputs = newStream.querySelectorAll('input');
             inputs.forEach(function(input) {
                 input.value = ''; // Clear the value of the input
             });
-    
+
             // Reset the select fields to their default option
             var selects = newStream.querySelectorAll('select');
             selects.forEach(function(select) {
                 select.selectedIndex = 0; // Reset to the first option
             });
-    
+
             // Append the new, empty stream item to the stream list
             streamList.appendChild(newStream);
-    
+
             // Reinitialize Flatpickr for new datetime fields
             flatpickr('.datetime-picker', {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
             });
-    
+
             // Attach event listener to new remove button
             attachRemoveEvent();
         });
-    
+
         // Remove stream functionality
         function attachRemoveEvent() {
             var removeButtons = document.querySelectorAll('.remove-stream-btn');
@@ -173,7 +173,7 @@
                     // Only remove the stream if there's more than one left
                     var streamList = document.getElementById('stream-list');
                     var streamItems = streamList.querySelectorAll('.stream-item');
-    
+
                     if (streamItems.length > 1) {
                         this.closest('.stream-item').remove(); // Remove the parent stream item
                     } else {
@@ -182,19 +182,37 @@
                 });
             });
         }
-    
+
         // Attach the remove event when the page loads
         attachRemoveEvent();
-    
+
         // Dark mode toggle functionality
         const body = document.body;
         const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
-    
+
         toggleDarkModeBtn.addEventListener('click', function() {
             body.classList.toggle('dark-mode');
             body.classList.toggle('light-mode');
         });
-    
+
+        // Form validation before submitting
+        document.getElementById('stream-form').addEventListener('submit', function(e) {
+            var datetimeFields = document.querySelectorAll('input[name="datetime"]');
+            var allFieldsValid = true;
+
+            datetimeFields.forEach(function(field) {
+                if (field.value === '') {
+                    allFieldsValid = false;
+                    alert('Please select a date and time for each stream.');
+                    e.preventDefault();  // Prevent form submission
+                }
+            });
+
+            if (!allFieldsValid) {
+                return false;  // Stop form from submitting if validation fails
+            }
+        });
+
         // Copy to clipboard functionality
         function copyToClipboard() {
             var text = '';
@@ -207,6 +225,5 @@
             });
         }
     </script>
-    
 </body>
 </html>
