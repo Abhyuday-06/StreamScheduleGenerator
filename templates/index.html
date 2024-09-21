@@ -4,42 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Schedule Generator</title>
-
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-    <!-- Include Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-    <!-- Custom CSS for Dark Mode -->
     <style>
         body.light-mode {
             background-color: white;
             color: black;
         }
-
         body.dark-mode {
             background-color: #121212;
             color: white;
         }
-
         .dark-mode .form-control {
             background-color: #333;
             color: white;
             border-color: #555;
         }
-
         .dark-mode .btn {
             background-color: #555;
             color: white;
         }
-
         .dark-mode .list-group-item {
             background-color: #333;
             color: white;
         }
-
-        /* Styling for the delete button */
         .remove-stream-btn {
             margin-top: 10px;
             display: block;
@@ -48,20 +36,28 @@
             border: none;
             cursor: pointer;
         }
-
         .remove-stream-btn:hover {
             background-color: #c82333;
         }
+        .nav-item {
+            margin-right: 10px;
+        }
     </style>
-
 </head>
 <body class="light-mode">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Stream Scheduler</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/feature_request">Feature Request/Bug Reporting</a></li>
+            </ul>
+            <button class="btn btn-secondary" id="toggle-dark-mode">Toggle Dark Mode</button>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h1>Stream Schedule Generator</h1>
-
-        <!-- Dark Mode Toggle Button -->
-        <button class="btn btn-secondary mb-3" id="toggle-dark-mode">Toggle Dark Mode</button>
-
         <form method="POST" id="stream-form">
             <div id="stream-list">
                 <div class="stream-item">
@@ -69,23 +65,20 @@
                         <label for="timezone">Timezone</label>
                         <select name="timezones" class="form-control">
                             <option value="AEST">AEST (GMT +10)</option>
-                            <option value="AEDT">AEDT (GMT +11)</option>
+                            <option value="AEDT">AEDT (GMT +11)- Starts from 6th October 2024</option>
                             <option value="CEST">CEST (GMT +2)</option>
                             <option value="CET">CET (GMT +1)</option>
                             <option value="SGT">SGT (GMT +8)</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="datetime">Date and Time</label>
                         <input type="text" name="datetime" class="form-control datetime-picker" placeholder="Select Date and Time" required>
                     </div>
-
                     <div class="form-group">
                         <label for="stream_info">Stream Info</label>
                         <input type="text" name="stream_info" class="form-control" placeholder="Enter Stream Info" required>
                     </div>
-
                     <div class="form-group">
                         <label for="platform">Platform</label>
                         <select name="platform" class="form-control">
@@ -94,16 +87,10 @@
                             <option value="Twitch + YouTube">🟪 Twitch + 🟥 YouTube</option>
                         </select>
                     </div>
-
-                    <!-- Delete Stream Button -->
                     <button type="button" class="remove-stream-btn">Remove Stream</button>
                 </div>
             </div>
-
-            <!-- Add Another Stream Button -->
             <button type="button" id="add-stream" class="btn btn-secondary">Add Another Stream</button>
-            
-            <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Generate</button>
         </form>
 
@@ -120,62 +107,44 @@
         {% endif %}
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
     <script>
-        // Initialize Flatpickr for datetime picker
         flatpickr('.datetime-picker', {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
         });
 
-        // Add new stream functionality
         document.getElementById('add-stream').addEventListener('click', function() {
             var streamList = document.getElementById('stream-list');
             var newStream = document.querySelector('.stream-item').cloneNode(true);
-
-            // Clear all input fields in the newly cloned stream
             var inputs = newStream.querySelectorAll('input');
             inputs.forEach(function(input) {
-                input.value = ''; // Clear the value of the input
+                input.value = '';
             });
-
-            // Reset the select fields to their default option
             var selects = newStream.querySelectorAll('select');
             selects.forEach(function(select) {
-                select.selectedIndex = 0; // Reset to the first option
+                select.selectedIndex = 0;
             });
-
-            // Append the new, empty stream item to the stream list
             streamList.appendChild(newStream);
-
-            // Reinitialize Flatpickr for new datetime fields
-            flatpickr('.datetime-picker', {
+            // Reinitialize flatpickr for the new datetime input
+            flatpickr(newStream.querySelector('.datetime-picker'), {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
             });
-
-            // Attach event listener to new remove button
             attachRemoveEvent();
         });
 
-        // Remove stream functionality
         function attachRemoveEvent() {
             var removeButtons = document.querySelectorAll('.remove-stream-btn');
             removeButtons.forEach(function(button) {
                 button.addEventListener('click', function() {
-                    // Only remove the stream if there's more than one left
                     var streamList = document.getElementById('stream-list');
                     var streamItems = streamList.querySelectorAll('.stream-item');
-
                     if (streamItems.length > 1) {
-                        this.closest('.stream-item').remove(); // Remove the parent stream item
+                        this.closest('.stream-item').remove();
                     } else {
                         alert("At least one stream must be present.");
                     }
@@ -183,37 +152,36 @@
             });
         }
 
-        // Attach the remove event when the page loads
         attachRemoveEvent();
 
-        // Dark mode toggle functionality
         const body = document.body;
         const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
-
         toggleDarkModeBtn.addEventListener('click', function() {
             body.classList.toggle('dark-mode');
             body.classList.toggle('light-mode');
+            localStorage.setItem('dark-mode', body.classList.contains('dark-mode'));
         });
 
-        // Form validation before submitting
+        if (localStorage.getItem('dark-mode') === 'true') {
+            body.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+        }
+
         document.getElementById('stream-form').addEventListener('submit', function(e) {
             var datetimeFields = document.querySelectorAll('input[name="datetime"]');
             var allFieldsValid = true;
-
             datetimeFields.forEach(function(field) {
                 if (field.value === '') {
                     allFieldsValid = false;
                     alert('Please select a date and time for each stream.');
-                    e.preventDefault();  // Prevent form submission
+                    e.preventDefault();
                 }
             });
-
             if (!allFieldsValid) {
-                return false;  // Stop form from submitting if validation fails
+                return false;
             }
         });
 
-        // Copy to clipboard functionality
         function copyToClipboard() {
             var text = '';
             var listItems = document.querySelectorAll('.list-group-item');

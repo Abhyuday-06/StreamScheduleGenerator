@@ -1,6 +1,6 @@
 import pytz
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -13,29 +13,24 @@ timezone_offsets = {
     "SGT": 8,      # GMT +8
 }
 
+# List to store feature requests and bug reports
+feature_requests = []
+
 def to_discord_timestamp(datetime_str, timezone):
-    # Parse the input date and time (in "Y-m-d H:i" format from Flatpickr)
     stream_time = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
-    
-    # Get the offset for the selected timezone
     offset_hours = timezone_offsets[timezone]
-    
-    # Create a timezone-aware datetime object based on the selected timezone
     timezone_obj = pytz.FixedOffset(offset_hours * 60)
     stream_time = timezone_obj.localize(stream_time)
-    
-    # Convert the timezone-aware datetime to a Discord timestamp
     discord_timestamp = int(stream_time.timestamp())
-    
     return discord_timestamp, stream_time.date()  # Returning both timestamp and date
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        timezones = request.form.getlist('timezones')  # Get all timezone inputs
-        datetime_strs = request.form.getlist('datetime')  # Get all date-time inputs
-        stream_infos = request.form.getlist('stream_info')  # Get all stream info inputs
-        platforms = request.form.getlist('platform')  # Get all platform inputs
+        timezones = request.form.getlist('timezones')
+        datetime_strs = request.form.getlist('datetime')
+        stream_infos = request.form.getlist('stream_info')
+        platforms = request.form.getlist('platform')
 
         output_messages = []
         previous_date = None
@@ -53,7 +48,6 @@ def index():
                 icon = "🟪 🟥"
                 message = f"{icon} **<t:{timestamp}:F>** {stream_info} 🟥 🟪"
 
-            # If this stream is on a different date from the previous stream, add a line gap
             if previous_date and previous_date != stream_date:
                 output_messages.append("")  # Add a line break if dates are different
 
@@ -66,6 +60,17 @@ def index():
         return render_template('index.html', output_messages=output_messages)
 
     return render_template('index.html')
+
+@app.route('/feature_request', methods=['GET', 'POST'])
+def feature_request():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip() or "Anonymous"
+        feature_request_text = request.form['feature_request']
+        # Add the request to the list
+        feature_requests.append(f"{username}: {feature_request_text}")
+
+    return render_template('feature_request.html', requests=feature_requests)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
