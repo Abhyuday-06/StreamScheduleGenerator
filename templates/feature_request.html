@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Request/Bug Reporting</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body.light-mode {
+            background-color: white;
+            color: black;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-mode .form-control {
+            background-color: #333;
+            color: white;
+            border-color: #555;
+        }
+
+        .dark-mode .btn {
+            background-color: #555;
+            color: white;
+        }
+
+        .dark-mode .list-group-item {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Stream Scheduler</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/feature_request">Feature Request/Bug Reporting</a></li>
+            </ul>
+            <button class="btn btn-secondary" id="toggle-dark-mode">Toggle Dark Mode</button>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Feature Request/Bug Reporting</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username (optional):</label>
+                <input type="text" name="username" class="form-control" id="username">
+            </div>
+            <div class="form-group">
+                <label for="feature_request">Feature Request/Bug:</label>
+                <textarea name="feature_request" class="form-control" id="feature_request" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        {% if requests %}
+            <div class="mt-5">
+                <h3>Submitted Requests</h3>
+                <ul class="list-group">
+                    {% for request in requests %}
+                        <li class="list-group-item">{{ request }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        const body = document.body;
+        const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
+        toggleDarkModeBtn.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            body.classList.toggle('light-mode');
+            localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+        });
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+        }
+    </script>
+</body>
+</html>
