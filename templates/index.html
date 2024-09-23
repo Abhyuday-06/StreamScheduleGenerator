@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Schedule Generator</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
@@ -46,15 +50,19 @@
 </head>
 <body class="light-mode">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Stream Scheduler</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/feature_request">Feature Request/Bug Reporting</a></li>
-            </ul>
-            <button class="btn btn-secondary" id="toggle-dark-mode">Toggle Dark Mode</button>
-        </div>
+    <a class="navbar-brand" href="/">Stream Scheduler</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/feature_request">Feature Request/Bug Reporting</a></li>
+        </ul>
+        <button class="btn btn-secondary" id="toggle-dark-mode">Toggle Dark Mode</button>
+    </div>
     </nav>
+
 
     <div class="container mt-5">
         <h1>Stream Schedule Generator</h1>
@@ -64,7 +72,7 @@
                     <div class="form-group">
                         <label for="timezone">Timezone</label>
                         <select name="timezones" class="form-control">
-                            <option value="AEST">AEST (GMT +10)</option>
+                            <option value="AEST">AEST (GMT +10)- Ends on 5th October 2024</option>
                             <option value="AEDT">AEDT (GMT +11)- Starts from 6th October 2024</option>
                             <option value="CEST">CEST (GMT +2)</option>
                             <option value="CET">CET (GMT +1)</option>
@@ -107,6 +115,7 @@
         {% endif %}
     </div>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
