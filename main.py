@@ -4,16 +4,14 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Dictionary to store GMT offsets for timezones
 timezone_offsets = {
-    "AEST": 10,    # GMT +10
-    "AEDT": 11,    # GMT +11
-    "CEST": 2,     # GMT +2
-    "CET": 1,      # GMT +1
-    "SGT": 8,      # GMT +8
+    "AEST": 10,    
+    "AEDT": 11,    
+    "CEST": 2,     
+    "CET": 1,      
+    "SGT": 8,      
 }
 
-# List to store feature requests and bug reports
 feature_requests = []
 
 def to_discord_timestamp(datetime_str, timezone):
@@ -22,7 +20,7 @@ def to_discord_timestamp(datetime_str, timezone):
     timezone_obj = pytz.FixedOffset(offset_hours * 60)
     stream_time = timezone_obj.localize(stream_time)
     discord_timestamp = int(stream_time.timestamp())
-    return discord_timestamp, stream_time.date()  # Returning both timestamp and date
+    return discord_timestamp, stream_time.date()  
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -52,7 +50,7 @@ def index():
                 output_messages.append("")  # Add a line break if dates are different
 
             output_messages.append(message)
-            previous_date = stream_date  # Update the previous date
+            previous_date = stream_date  
 
         platforms_info = "\n\n 🟪 = Twitch \n 🟩 = Kick \n 🟪 🟥 = Twitch + YouTube"
         output_messages.append(platforms_info)
@@ -66,7 +64,6 @@ def feature_request():
     if request.method == 'POST':
         username = request.form.get('username', '').strip() or "Anonymous"
         feature_request_text = request.form['feature_request']
-        # Add the request to the list
         feature_requests.append(f"{username}: {feature_request_text}")
 
     return render_template('feature_request.html', requests=feature_requests)
